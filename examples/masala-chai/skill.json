@@ -1,0 +1,1035 @@
+{
+  "schemaVersion": "1.0",
+  "id": "skl_01JB3Z7Q8K4M2N6P9R5T1V0W3X",
+  "slug": "maa-masala-chai",
+  "version": "1.0.0",
+  "title": {
+    "hi": "माँ की मसाला चाय",
+    "en": "Maa's masala chai"
+  },
+  "summary": {
+    "hi": "अदरक-इलायची वाली कड़क चाय, माँ के तरीके से।",
+    "en": "Strong ginger-cardamom chai, made the way Maa makes it."
+  },
+  "languages": {
+    "authored": "hi",
+    "available": [
+      "hi",
+      "en"
+    ]
+  },
+  "author": {
+    "displayName": "Maa",
+    "role": "expert"
+  },
+  "consent": {
+    "recordedAt": "2026-10-18T09:12:00+05:30",
+    "scopes": [
+      "derive-skill",
+      "store-recording",
+      "share-with-invited",
+      "use-for-evaluation"
+    ],
+    "policyVersion": "2026-10",
+    "retainRecordingUntil": "2026-11-17"
+  },
+  "safety": {
+    "category": "cooking",
+    "hazardTags": [
+      "hot-surface",
+      "open-flame"
+    ],
+    "reviewStatus": "approved"
+  },
+  "estimatedDurationSec": 600,
+  "perception": {
+    "embeddingModel": {
+      "id": "facebook/dinov2-small",
+      "revision": "executorch-xnnpack-fp16-v1",
+      "dim": 384,
+      "preprocess": "resize-256-center-crop-224-imagenet-norm"
+    },
+    "learnProfile": "medium-7fps",
+    "workZone": {
+      "pitchMinDeg": -72,
+      "pitchMaxDeg": -18
+    },
+    "thresholds": {
+      "low": 0.45,
+      "high": 0.7,
+      "autoAccept": 0.9,
+      "consecutive": 3
+    }
+  },
+  "privacy": {
+    "keepReferenceImages": false,
+    "bystanderFacesBlurred": true
+  },
+  "materials": [
+    {
+      "id": "mat-water",
+      "name": {
+        "hi": "पानी",
+        "en": "Water"
+      },
+      "quantity": {
+        "hi": "1 कप",
+        "en": "1 cup"
+      }
+    },
+    {
+      "id": "mat-ginger",
+      "name": {
+        "hi": "अदरक",
+        "en": "Ginger"
+      },
+      "quantity": {
+        "hi": "1 इंच का टुकड़ा",
+        "en": "1-inch piece"
+      }
+    },
+    {
+      "id": "mat-cardamom",
+      "name": {
+        "hi": "इलायची",
+        "en": "Green cardamom"
+      },
+      "quantity": {
+        "hi": "2",
+        "en": "2 pods"
+      }
+    },
+    {
+      "id": "mat-tea",
+      "name": {
+        "hi": "चाय पत्ती",
+        "en": "Loose tea leaves"
+      },
+      "quantity": {
+        "hi": "डेढ़ चम्मच",
+        "en": "1½ teaspoons"
+      }
+    },
+    {
+      "id": "mat-milk",
+      "name": {
+        "hi": "दूध",
+        "en": "Milk"
+      },
+      "quantity": {
+        "hi": "1 कप",
+        "en": "1 cup"
+      }
+    },
+    {
+      "id": "mat-sugar",
+      "name": {
+        "hi": "चीनी",
+        "en": "Sugar"
+      },
+      "quantity": {
+        "hi": "स्वाद अनुसार",
+        "en": "To taste"
+      }
+    }
+  ],
+  "steps": [
+    {
+      "id": "s1-water",
+      "title": {
+        "hi": "पानी",
+        "en": "Water"
+      },
+      "instruction": {
+        "text": {
+          "hi": "पैन में एक कप पानी डालो और गैस पर रखो।",
+          "en": "Pour one cup of water into the pan and put it on the stove."
+        },
+        "clip": "clip-s1"
+      },
+      "dependsOn": [],
+      "completion": {
+        "policy": "all",
+        "signals": [
+          {
+            "type": "visual",
+            "criteria": "A pan containing water sits on a lit gas burner."
+          }
+        ]
+      },
+      "references": {
+        "before": [
+          "emb-s1-before"
+        ],
+        "during": [
+          "emb-s1-during"
+        ],
+        "after": [
+          "emb-s1-after"
+        ]
+      },
+      "calibration": {
+        "a": 8.4,
+        "b": -3.1
+      },
+      "expectedDurationSec": {
+        "p50": 25,
+        "p90": 60
+      },
+      "materials": [
+        "mat-water"
+      ],
+      "sourceSpanMs": {
+        "startMs": 0,
+        "endMs": 31000
+      }
+    },
+    {
+      "id": "s2-ginger",
+      "title": {
+        "hi": "अदरक",
+        "en": "Ginger"
+      },
+      "instruction": {
+        "text": {
+          "hi": "अदरक को कूटकर पानी में डालो।",
+          "en": "Crush the ginger and add it to the water."
+        },
+        "clip": "clip-s2"
+      },
+      "dependsOn": [
+        "s1-water"
+      ],
+      "completion": {
+        "policy": "all",
+        "signals": [
+          {
+            "type": "visual",
+            "criteria": "Crushed ginger pieces are floating in the water in the pan."
+          }
+        ]
+      },
+      "references": {
+        "before": [
+          "emb-s2-before"
+        ],
+        "during": [
+          "emb-s2-during"
+        ],
+        "after": [
+          "emb-s2-after"
+        ]
+      },
+      "calibration": {
+        "a": 9.0,
+        "b": -2.8
+      },
+      "expectedDurationSec": {
+        "p50": 40,
+        "p90": 90
+      },
+      "hints": [
+        {
+          "trigger": "on_stuck",
+          "afterSec": 90,
+          "message": {
+            "text": {
+              "hi": "खल-मूसल में कूट लो।",
+              "en": "Crush it in the mortar and pestle."
+            },
+            "clip": "clip-h-s2-stuck"
+          }
+        }
+      ],
+      "materials": [
+        "mat-ginger"
+      ],
+      "sourceSpanMs": {
+        "startMs": 31000,
+        "endMs": 78000
+      }
+    },
+    {
+      "id": "s3-cardamom",
+      "title": {
+        "hi": "इलायची",
+        "en": "Cardamom"
+      },
+      "instruction": {
+        "text": {
+          "hi": "दो इलायची कूटकर डाल दो।",
+          "en": "Crush two cardamom pods and add them."
+        },
+        "clip": "clip-s3"
+      },
+      "dependsOn": [
+        "s1-water"
+      ],
+      "completion": {
+        "policy": "all",
+        "signals": [
+          {
+            "type": "visual",
+            "criteria": "Cracked green cardamom pods are in the water in the pan."
+          }
+        ]
+      },
+      "references": {
+        "before": [
+          "emb-s3-before"
+        ],
+        "during": [
+          "emb-s3-during"
+        ],
+        "after": [
+          "emb-s3-after"
+        ]
+      },
+      "calibration": {
+        "a": 7.6,
+        "b": -2.2
+      },
+      "expectedDurationSec": {
+        "p50": 20,
+        "p90": 50
+      },
+      "materials": [
+        "mat-cardamom"
+      ],
+      "sourceSpanMs": {
+        "startMs": 78000,
+        "endMs": 101000
+      }
+    },
+    {
+      "id": "s4-boil",
+      "title": {
+        "hi": "उबाल",
+        "en": "Boil"
+      },
+      "instruction": {
+        "text": {
+          "hi": "दो मिनट तक उबलने दो।",
+          "en": "Let it boil for two minutes."
+        },
+        "clip": "clip-s4"
+      },
+      "dependsOn": [
+        "s2-ginger",
+        "s3-cardamom"
+      ],
+      "completion": {
+        "policy": "all",
+        "signals": [
+          {
+            "type": "timer",
+            "seconds": 120,
+            "announce": true
+          },
+          {
+            "type": "visual",
+            "criteria": "The water is at a rolling boil and has turned pale yellow."
+          }
+        ]
+      },
+      "references": {
+        "before": [
+          "emb-s4-before"
+        ],
+        "during": [
+          "emb-s4-during"
+        ],
+        "after": [
+          "emb-s4-after"
+        ]
+      },
+      "calibration": {
+        "a": 6.9,
+        "b": -1.9
+      },
+      "expectedDurationSec": {
+        "p50": 130,
+        "p90": 200
+      },
+      "hints": [
+        {
+          "trigger": "on_enter",
+          "message": {
+            "text": {
+              "hi": "आँच मध्यम रखो।",
+              "en": "Keep the flame at medium."
+            },
+            "clip": "clip-h-s4-enter"
+          }
+        }
+      ],
+      "sourceSpanMs": {
+        "startMs": 101000,
+        "endMs": 236000
+      }
+    },
+    {
+      "id": "s5-tea",
+      "title": {
+        "hi": "चाय पत्ती",
+        "en": "Tea leaves"
+      },
+      "instruction": {
+        "text": {
+          "hi": "अब डेढ़ चम्मच चाय पत्ती डालो।",
+          "en": "Now add one and a half teaspoons of tea leaves."
+        },
+        "clip": "clip-s5"
+      },
+      "dependsOn": [
+        "s4-boil"
+      ],
+      "completion": {
+        "policy": "all",
+        "signals": [
+          {
+            "type": "visual",
+            "criteria": "Loose black tea leaves are in the boiling water, which is turning dark brown."
+          }
+        ]
+      },
+      "references": {
+        "before": [
+          "emb-s5-before"
+        ],
+        "after": [
+          "emb-s5-after"
+        ]
+      },
+      "calibration": {
+        "a": 9.2,
+        "b": -2.6
+      },
+      "expectedDurationSec": {
+        "p50": 15,
+        "p90": 40
+      },
+      "mistakes": [
+        {
+          "id": "m-tea-before-ginger",
+          "kind": "order",
+          "requires": [
+            "s2-ginger",
+            "s4-boil"
+          ],
+          "message": {
+            "text": {
+              "hi": "रुको — पत्ती से पहले अदरक डालो, नहीं तो अदरक का स्वाद नहीं आएगा।",
+              "en": "Wait — add the ginger before the tea leaves, or you won't taste the ginger."
+            },
+            "clip": "clip-m-tea-before-ginger"
+          },
+          "severity": "warn",
+          "source": "expert"
+        }
+      ],
+      "materials": [
+        "mat-tea"
+      ],
+      "sourceSpanMs": {
+        "startMs": 236000,
+        "endMs": 262000
+      }
+    },
+    {
+      "id": "s6-milk",
+      "title": {
+        "hi": "दूध",
+        "en": "Milk"
+      },
+      "instruction": {
+        "text": {
+          "hi": "एक कप दूध डालो।",
+          "en": "Add one cup of milk."
+        },
+        "clip": "clip-s6"
+      },
+      "dependsOn": [
+        "s5-tea"
+      ],
+      "completion": {
+        "policy": "all",
+        "signals": [
+          {
+            "type": "visual",
+            "criteria": "Milk has been added; the liquid in the pan is a light tan colour."
+          }
+        ]
+      },
+      "references": {
+        "before": [
+          "emb-s6-before"
+        ],
+        "during": [
+          "emb-s6-during"
+        ],
+        "after": [
+          "emb-s6-after"
+        ]
+      },
+      "calibration": {
+        "a": 5.8,
+        "b": -1.4
+      },
+      "expectedDurationSec": {
+        "p50": 15,
+        "p90": 40
+      },
+      "materials": [
+        "mat-milk"
+      ],
+      "sourceSpanMs": {
+        "startMs": 262000,
+        "endMs": 281000
+      }
+    },
+    {
+      "id": "s7-sugar",
+      "title": {
+        "hi": "चीनी",
+        "en": "Sugar"
+      },
+      "instruction": {
+        "text": {
+          "hi": "स्वाद के हिसाब से चीनी डालो।",
+          "en": "Add sugar to taste."
+        },
+        "clip": "clip-s7"
+      },
+      "dependsOn": [
+        "s5-tea"
+      ],
+      "optional": true,
+      "completion": {
+        "policy": "any",
+        "signals": [
+          {
+            "type": "confirm",
+            "phrases": [
+              "done",
+              "हो गया",
+              "ho gaya"
+            ]
+          }
+        ]
+      },
+      "expectedDurationSec": {
+        "p50": 10,
+        "p90": 30
+      },
+      "hints": [
+        {
+          "trigger": "on_enter",
+          "message": {
+            "text": {
+              "hi": "चीनी डालकर “हो गया” बोलो।",
+              "en": "Say “done” once the sugar is in."
+            }
+          }
+        }
+      ],
+      "materials": [
+        "mat-sugar"
+      ],
+      "sourceSpanMs": {
+        "startMs": 281000,
+        "endMs": 293000
+      }
+    },
+    {
+      "id": "s8-rise",
+      "title": {
+        "hi": "दो उबाल",
+        "en": "Two boils"
+      },
+      "instruction": {
+        "text": {
+          "hi": "दो बार उबाल आने दो, हर बार आँच धीमी करो।",
+          "en": "Let it come to a boil twice, lowering the flame each time."
+        },
+        "clip": "clip-s8"
+      },
+      "dependsOn": [
+        "s6-milk",
+        "s7-sugar"
+      ],
+      "completion": {
+        "policy": "all",
+        "signals": [
+          {
+            "type": "timer",
+            "seconds": 180,
+            "announce": true
+          },
+          {
+            "type": "visual",
+            "criteria": "The chai has foamed up close to the rim of the pan."
+          }
+        ]
+      },
+      "references": {
+        "before": [
+          "emb-s8-before"
+        ],
+        "during": [
+          "emb-s8-during"
+        ],
+        "after": [
+          "emb-s8-after"
+        ]
+      },
+      "calibration": {
+        "a": 7.1,
+        "b": -2.0
+      },
+      "expectedDurationSec": {
+        "p50": 200,
+        "p90": 300
+      },
+      "mistakes": [
+        {
+          "id": "m-boil-over",
+          "kind": "visual",
+          "criteria": "Chai is spilling over the rim of the pan onto the stove.",
+          "message": {
+            "text": {
+              "hi": "आँच धीमी करो!",
+              "en": "Lower the flame!"
+            },
+            "clip": "clip-m-boil-over"
+          },
+          "severity": "warn",
+          "source": "expert"
+        }
+      ],
+      "sourceSpanMs": {
+        "startMs": 293000,
+        "endMs": 498000
+      }
+    },
+    {
+      "id": "s9-strain",
+      "title": {
+        "hi": "छानो",
+        "en": "Strain"
+      },
+      "instruction": {
+        "text": {
+          "hi": "छन्नी से कप में छान लो।",
+          "en": "Strain it into cups."
+        },
+        "clip": "clip-s9"
+      },
+      "dependsOn": [
+        "s8-rise"
+      ],
+      "completion": {
+        "policy": "all",
+        "signals": [
+          {
+            "type": "visual",
+            "criteria": "Chai has been strained into cups; the strainer holds the used leaves."
+          }
+        ]
+      },
+      "references": {
+        "before": [
+          "emb-s9-before"
+        ],
+        "during": [
+          "emb-s9-during"
+        ],
+        "after": [
+          "emb-s9-after"
+        ]
+      },
+      "calibration": {
+        "a": 8.8,
+        "b": -2.9
+      },
+      "expectedDurationSec": {
+        "p50": 40,
+        "p90": 90
+      },
+      "sourceSpanMs": {
+        "startMs": 498000,
+        "endMs": 560000
+      }
+    }
+  ],
+  "assets": {
+    "clip-s1": {
+      "path": "assets/audio/clip-s1.opus",
+      "mime": "audio/ogg",
+      "sha256": "eec0e10494556d1d51d4b85244e28e824736713006260eea68600013aef69f88",
+      "bytes": 19500,
+      "durationMs": 6500
+    },
+    "emb-s1-before": {
+      "path": "assets/emb/emb-s1-before.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "83ec260f64fd2f1b8053eb9072e6c9ce4093f7db27432becc1fd8c0575ceb63c",
+      "bytes": 2304,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 3
+      }
+    },
+    "emb-s1-during": {
+      "path": "assets/emb/emb-s1-during.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "2b5f2e8810d7d2653bb4794b3240fe465bb5b7417d9655dc54045c7b29da5182",
+      "bytes": 3840,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 5
+      }
+    },
+    "emb-s1-after": {
+      "path": "assets/emb/emb-s1-after.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "fbc4cafe3c57ff734d59c2ea18e202a36114b8fef50bc50dd1023c0a06adfe39",
+      "bytes": 3072,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 4
+      }
+    },
+    "clip-s2": {
+      "path": "assets/audio/clip-s2.opus",
+      "mime": "audio/ogg",
+      "sha256": "3974e8efa856b0aa56cbb0807c76d6c76a889d10890627ef462c34c3448c492d",
+      "bytes": 15000,
+      "durationMs": 5000
+    },
+    "emb-s2-before": {
+      "path": "assets/emb/emb-s2-before.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "2536085af0cbc5ae733ed9709024faea8859ae2c14f4025eae628a6c571568a3",
+      "bytes": 2304,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 3
+      }
+    },
+    "emb-s2-during": {
+      "path": "assets/emb/emb-s2-during.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "77e30d741c3777ae2bda391d60910fbacf3b327b2923eb0957ee1ac7e0fa8f20",
+      "bytes": 3840,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 5
+      }
+    },
+    "emb-s2-after": {
+      "path": "assets/emb/emb-s2-after.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "41b21849b8c72e0f7bb7799fd5079bd4747306fa10c69c8304ff42ba33974948",
+      "bytes": 3072,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 4
+      }
+    },
+    "clip-h-s2-stuck": {
+      "path": "assets/audio/clip-h-s2-stuck.opus",
+      "mime": "audio/ogg",
+      "sha256": "d92b4d727af8fd29f8644ffc26f540147f0e3c98921bc4ad3254374bd69f8814",
+      "bytes": 9000,
+      "durationMs": 3000
+    },
+    "clip-s3": {
+      "path": "assets/audio/clip-s3.opus",
+      "mime": "audio/ogg",
+      "sha256": "4ebae052ada8fd25b07ee76286093c5f53d2668aa8778cf710437a4dbb88e7c5",
+      "bytes": 12000,
+      "durationMs": 4000
+    },
+    "emb-s3-before": {
+      "path": "assets/emb/emb-s3-before.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "fa5a7d2a2b2475f5931f88f9cd6d93e6928785d4c1250a693d14aa00815b76ff",
+      "bytes": 2304,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 3
+      }
+    },
+    "emb-s3-during": {
+      "path": "assets/emb/emb-s3-during.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "a375954fb38606147685ca83aab60b02d873aa1382852e0f3142ce123c3b4191",
+      "bytes": 3840,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 5
+      }
+    },
+    "emb-s3-after": {
+      "path": "assets/emb/emb-s3-after.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "aa2962ef515338758c5488fbc886b1dbda07de8bb16ebf56719cc027847452b3",
+      "bytes": 3072,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 4
+      }
+    },
+    "clip-s4": {
+      "path": "assets/audio/clip-s4.opus",
+      "mime": "audio/ogg",
+      "sha256": "0e03c0c3cd79ef701e02db2827df95d07cca9f56f7873fcbdee8c0f35e691953",
+      "bytes": 10500,
+      "durationMs": 3500
+    },
+    "emb-s4-before": {
+      "path": "assets/emb/emb-s4-before.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "dcd0ffde3e07045d1d271006594db9e4ad98f2457da1f7d0929c516e52fd01f4",
+      "bytes": 2304,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 3
+      }
+    },
+    "emb-s4-during": {
+      "path": "assets/emb/emb-s4-during.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "adfb382499d0d1fb438e7ab3bbc8a45f2c8dcc9dd468411212b8c583a43a0591",
+      "bytes": 3840,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 5
+      }
+    },
+    "emb-s4-after": {
+      "path": "assets/emb/emb-s4-after.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "d3ed3aac1c8a3ad49a763c2dfb31038f2d8c4200c494a7c9ff56a5c1e6908941",
+      "bytes": 3072,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 4
+      }
+    },
+    "clip-h-s4-enter": {
+      "path": "assets/audio/clip-h-s4-enter.opus",
+      "mime": "audio/ogg",
+      "sha256": "a0acc66ed9a9d227134197b1f59564047df954f27fbdb316f8077f43ad0a1df5",
+      "bytes": 6000,
+      "durationMs": 2000
+    },
+    "clip-s5": {
+      "path": "assets/audio/clip-s5.opus",
+      "mime": "audio/ogg",
+      "sha256": "bd7400e39eca94be8a561162cebe14e4d50742a7f24db18d9d01ba7295f7f09a",
+      "bytes": 12000,
+      "durationMs": 4000
+    },
+    "emb-s5-before": {
+      "path": "assets/emb/emb-s5-before.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "b06d8055a47eaea8b94830eb7da60334eda51c269223739e692516192f548645",
+      "bytes": 2304,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 3
+      }
+    },
+    "emb-s5-after": {
+      "path": "assets/emb/emb-s5-after.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "a93787a6f04cf462cca11079d5105333d27146b681ba01db4453d9c3138fb131",
+      "bytes": 3072,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 4
+      }
+    },
+    "clip-m-tea-before-ginger": {
+      "path": "assets/audio/clip-m-tea-before-ginger.opus",
+      "mime": "audio/ogg",
+      "sha256": "26cdc5af4512a197ebf52dd1d5417e3bb2d42fc2eacfbda88fe33f211370dcc3",
+      "bytes": 16500,
+      "durationMs": 5500
+    },
+    "clip-s6": {
+      "path": "assets/audio/clip-s6.opus",
+      "mime": "audio/ogg",
+      "sha256": "b628f5958625134011a289c7eb20bf4384b768523539857ba09df7f7445a6f7c",
+      "bytes": 9000,
+      "durationMs": 3000
+    },
+    "emb-s6-before": {
+      "path": "assets/emb/emb-s6-before.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "138e86b04b071ca61ef0ec6d1728bffcf82e69811d350613dda8ed7bedf0dc4d",
+      "bytes": 2304,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 3
+      }
+    },
+    "emb-s6-during": {
+      "path": "assets/emb/emb-s6-during.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "941cf88f04332d127974829e89b31a4d909b466efe94f5f5cc93d41b04d13679",
+      "bytes": 3840,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 5
+      }
+    },
+    "emb-s6-after": {
+      "path": "assets/emb/emb-s6-after.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "6390f9d6330f66c02b3b9df71f8d24cefd0337537f43a500144a1b81427750cf",
+      "bytes": 3072,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 4
+      }
+    },
+    "clip-s7": {
+      "path": "assets/audio/clip-s7.opus",
+      "mime": "audio/ogg",
+      "sha256": "e9d543839284fdc51770629b6f7224cf2e0817ae537b92e928dab87981bfc2ba",
+      "bytes": 9000,
+      "durationMs": 3000
+    },
+    "clip-s8": {
+      "path": "assets/audio/clip-s8.opus",
+      "mime": "audio/ogg",
+      "sha256": "12971f4f91da27b5ad9bdbcdfe5ed9daa5292a5ff72e8c944fce54c7133ace68",
+      "bytes": 18000,
+      "durationMs": 6000
+    },
+    "emb-s8-before": {
+      "path": "assets/emb/emb-s8-before.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "36eeb474188e572f64c704a661f16da4b68121d593bb8fb2173d4477da12e0d3",
+      "bytes": 2304,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 3
+      }
+    },
+    "emb-s8-during": {
+      "path": "assets/emb/emb-s8-during.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "48b57f5c594569704040551df7d684fc40e370f8cf1014e3765586e2a09dd975",
+      "bytes": 3840,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 5
+      }
+    },
+    "emb-s8-after": {
+      "path": "assets/emb/emb-s8-after.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "1eab891d2e0ebcfbc912a2f19abcecffa019262f27719204cf4d7e936ccd0783",
+      "bytes": 3072,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 4
+      }
+    },
+    "clip-m-boil-over": {
+      "path": "assets/audio/clip-m-boil-over.opus",
+      "mime": "audio/ogg",
+      "sha256": "74ca1811d9fcd94cad93fc33860c9b3da222eb193d90f4fab8b72b6b0689f2b0",
+      "bytes": 4500,
+      "durationMs": 1500
+    },
+    "clip-s9": {
+      "path": "assets/audio/clip-s9.opus",
+      "mime": "audio/ogg",
+      "sha256": "de4ca35d537fcb6463565f2b9610a25d11886f441fa89fecf56cd6369ba6c3ff",
+      "bytes": 9000,
+      "durationMs": 3000
+    },
+    "emb-s9-before": {
+      "path": "assets/emb/emb-s9-before.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "7a8713c7ccaabe90860f99fff88b861196cbeaae9a404bfb4bed4143f0f79625",
+      "bytes": 2304,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 3
+      }
+    },
+    "emb-s9-during": {
+      "path": "assets/emb/emb-s9-during.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "11e5871940dd654819bc8b0bc8e3a7e642375fbe39a305fe75992d43ad6e8669",
+      "bytes": 3840,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 5
+      }
+    },
+    "emb-s9-after": {
+      "path": "assets/emb/emb-s9-after.f16",
+      "mime": "application/x-ustaad-embedding",
+      "sha256": "9f95f709ab87fa2f02358e86d6f6ce4c3dc6c6075a1ac118b17e15e5f1ee9f95",
+      "bytes": 3072,
+      "embedding": {
+        "dim": 384,
+        "dtype": "float16",
+        "count": 4
+      }
+    }
+  },
+  "provenance": {
+    "compiler": {
+      "version": "0.1.0",
+      "models": {
+        "asr.narration": "sarvam/saaras:v4",
+        "compile.draft": "google/gemini-3.8-flash",
+        "embeddings": "facebook/dinov2-small"
+      }
+    },
+    "sourceRecording": {
+      "sha256": "6d6d74058eca6f5b64a70722e5852dcd566574c5fa01ae7b7d24d866f2df03fe",
+      "durationMs": 575000,
+      "device": "Ray-Ban Meta (Gen 2)",
+      "profile": "high-15fps"
+    },
+    "selfConsistency": {
+      "stepF1": 0.94,
+      "weakSteps": [
+        "s6-milk"
+      ]
+    },
+    "createdAt": "2026-10-18T10:02:41+05:30",
+    "updatedAt": "2026-10-18T10:40:05+05:30"
+  }
+}

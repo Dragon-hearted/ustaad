@@ -1,0 +1,513 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ustaad:schema:skill:1",
+  "title": "Ustaad skill file",
+  "description": "A skill compiled from one first-person demonstration. Cross-references (dependencies, asset IDs, language coverage, graph acyclicity) are checked by tools/validate_skill.py because JSON Schema cannot express them.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "slug",
+    "version",
+    "title",
+    "languages",
+    "author",
+    "consent",
+    "safety",
+    "perception",
+    "privacy",
+    "materials",
+    "steps",
+    "assets",
+    "provenance"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "description": "Format version. Runtimes accept any 1.x; minor versions only add optional fields.",
+      "type": "string",
+      "pattern": "^1\\.(0|[1-9][0-9]*)$"
+    },
+    "id": {
+      "description": "Stable skill ID: 'skl_' followed by a ULID.",
+      "type": "string",
+      "pattern": "^skl_[0-9A-HJKMNP-TV-Z]{26}$"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "maxLength": 64
+    },
+    "version": {
+      "description": "Semantic version of this skill; bumped on every publish.",
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "title": { "$ref": "#/$defs/localizedShortText" },
+    "summary": { "$ref": "#/$defs/localizedText" },
+    "languages": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authored", "available"],
+      "properties": {
+        "authored": { "$ref": "#/$defs/languageTag" },
+        "available": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/languageTag" },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "author": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["displayName", "role"],
+      "properties": {
+        "displayName": {
+          "description": "Free text chosen by the author. Ustaad never verifies or infers anyone's identity.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "role": { "enum": ["expert", "trainer", "hobbyist"] }
+      }
+    },
+    "consent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recordedAt", "scopes", "policyVersion"],
+      "properties": {
+        "recordedAt": { "type": "string", "format": "date-time" },
+        "scopes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "derive-skill",
+              "store-recording",
+              "share-with-invited",
+              "share-public",
+              "use-for-evaluation"
+            ]
+          },
+          "contains": { "const": "derive-skill" }
+        },
+        "policyVersion": { "type": "string", "minLength": 1 },
+        "retainRecordingUntil": { "type": "string", "format": "date" }
+      }
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category", "hazardTags", "reviewStatus"],
+      "properties": {
+        "category": {
+          "description": "Allowlist. Medical, electrical mains, gas, vehicle and chemical work are deliberately absent.",
+          "enum": ["cooking", "assembly", "craft", "basic-repair", "puzzle", "other"]
+        },
+        "hazardTags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["hot-surface", "open-flame", "sharp-tool", "small-parts", "lifting"]
+          }
+        },
+        "reviewStatus": { "enum": ["draft", "approved", "rejected"] }
+      }
+    },
+    "estimatedDurationSec": { "type": "integer", "minimum": 1 },
+    "perception": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["embeddingModel", "learnProfile", "thresholds"],
+      "properties": {
+        "embeddingModel": {
+          "description": "Pins the exact model, weights and preprocessing. A runtime that cannot reproduce it must refuse the skill.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "revision", "dim", "preprocess"],
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "revision": { "type": "string", "minLength": 1 },
+            "dim": { "type": "integer", "minimum": 1 },
+            "preprocess": { "type": "string", "minLength": 1 }
+          }
+        },
+        "learnProfile": {
+          "enum": ["low-2fps", "medium-7fps", "medium-15fps", "high-15fps"]
+        },
+        "workZone": {
+          "description": "Head pitch range (degrees, negative = looking down) observed while the expert worked.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["pitchMinDeg", "pitchMaxDeg"],
+          "properties": {
+            "pitchMinDeg": { "type": "number", "minimum": -90, "maximum": 90 },
+            "pitchMaxDeg": { "type": "number", "minimum": -90, "maximum": 90 }
+          }
+        },
+        "thresholds": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["low", "high", "autoAccept", "consecutive"],
+          "properties": {
+            "low": { "$ref": "#/$defs/probability" },
+            "high": { "$ref": "#/$defs/probability" },
+            "autoAccept": { "$ref": "#/$defs/probability" },
+            "consecutive": { "type": "integer", "minimum": 1, "maximum": 10 }
+          }
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["keepReferenceImages", "bystanderFacesBlurred"],
+      "properties": {
+        "keepReferenceImages": {
+          "description": "If false, references must be embeddings only; no keyframe images are shipped.",
+          "type": "boolean"
+        },
+        "bystanderFacesBlurred": { "const": true }
+      }
+    },
+    "materials": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/material" }
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 40,
+      "items": { "$ref": "#/$defs/step" }
+    },
+    "assets": {
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/assetId" },
+      "additionalProperties": { "$ref": "#/$defs/asset" }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["compiler", "createdAt"],
+      "properties": {
+        "compiler": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["version"],
+          "properties": {
+            "version": { "type": "string", "minLength": 1 },
+            "models": {
+              "description": "Task name to 'provider/model' used for this compile.",
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            }
+          }
+        },
+        "sourceRecording": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sha256", "durationMs"],
+          "properties": {
+            "sha256": { "$ref": "#/$defs/sha256" },
+            "durationMs": { "type": "integer", "minimum": 1 },
+            "device": { "type": "string" },
+            "profile": { "enum": ["low-2fps", "medium-7fps", "medium-15fps", "high-15fps"] }
+          }
+        },
+        "selfConsistency": {
+          "description": "How well the tracker recovered the expert's own demonstration.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["stepF1"],
+          "properties": {
+            "stepF1": { "$ref": "#/$defs/probability" },
+            "weakSteps": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/stepId" },
+              "uniqueItems": true
+            }
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "$defs": {
+    "languageTag": {
+      "description": "BCP-47 language tag, e.g. 'hi', 'en', 'en-IN'.",
+      "type": "string",
+      "pattern": "^[a-z]{2,3}(-[A-Z]{2})?$"
+    },
+    "localizedText": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "#/$defs/languageTag" },
+      "additionalProperties": { "type": "string", "minLength": 1, "maxLength": 500 }
+    },
+    "localizedShortText": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": { "$ref": "#/$defs/languageTag" },
+      "additionalProperties": { "type": "string", "minLength": 1, "maxLength": 80 }
+    },
+    "probability": { "type": "number", "minimum": 0, "maximum": 1 },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "assetId": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,63}$" },
+    "stepId": { "type": "string", "pattern": "^s[0-9]{1,2}-[a-z0-9]+(-[a-z0-9]+)*$" },
+    "materialId": { "type": "string", "pattern": "^mat-[a-z0-9]+(-[a-z0-9]+)*$" },
+    "mistakeId": { "type": "string", "pattern": "^m-[a-z0-9]+(-[a-z0-9]+)*$" },
+    "assetIdList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/assetId" },
+      "uniqueItems": true
+    },
+    "spokenText": {
+      "description": "Text plus an optional clip of the expert saying it.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "properties": {
+        "text": { "$ref": "#/$defs/localizedText" },
+        "clip": { "$ref": "#/$defs/assetId" }
+      }
+    },
+    "material": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name"],
+      "properties": {
+        "id": { "$ref": "#/$defs/materialId" },
+        "name": { "$ref": "#/$defs/localizedShortText" },
+        "quantity": { "$ref": "#/$defs/localizedShortText" },
+        "reference": { "$ref": "#/$defs/assetId" }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "instruction",
+        "dependsOn",
+        "completion",
+        "expectedDurationSec",
+        "sourceSpanMs"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/stepId" },
+        "title": { "$ref": "#/$defs/localizedShortText" },
+        "instruction": { "$ref": "#/$defs/spokenText" },
+        "dependsOn": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/stepId" },
+          "uniqueItems": true
+        },
+        "optional": { "type": "boolean", "default": false },
+        "completion": { "$ref": "#/$defs/completion" },
+        "references": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["after"],
+          "properties": {
+            "before": { "$ref": "#/$defs/assetIdList" },
+            "during": { "$ref": "#/$defs/assetIdList" },
+            "after": {
+              "allOf": [{ "$ref": "#/$defs/assetIdList" }, { "minItems": 1 }]
+            }
+          }
+        },
+        "calibration": {
+          "description": "Logistic mapping from completion margin to probability: sigmoid(a * margin + b).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["a", "b"],
+          "properties": {
+            "a": { "type": "number", "exclusiveMinimum": 0 },
+            "b": { "type": "number" }
+          }
+        },
+        "expectedDurationSec": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["p50", "p90"],
+          "properties": {
+            "p50": { "type": "number", "exclusiveMinimum": 0 },
+            "p90": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        "mistakes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/mistake" }
+        },
+        "hints": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/hint" }
+        },
+        "materials": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/materialId" },
+          "uniqueItems": true
+        },
+        "sourceSpanMs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["startMs", "endMs"],
+          "properties": {
+            "startMs": { "type": "integer", "minimum": 0 },
+            "endMs": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    },
+    "completion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy", "signals"],
+      "properties": {
+        "policy": {
+          "description": "'all': every signal must be satisfied. 'any': one is enough.",
+          "enum": ["all", "any"]
+        },
+        "signals": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/signal" }
+        }
+      }
+    },
+    "signal": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "criteria"],
+          "properties": {
+            "type": { "const": "visual" },
+            "criteria": {
+              "description": "An observable post-condition, in English, for the verifier model.",
+              "type": "string",
+              "minLength": 10,
+              "maxLength": 300
+            },
+            "verify": {
+              "description": "'auto': verify only in the uncertain band (default). 'always': every completion is verified.",
+              "enum": ["auto", "always"],
+              "default": "auto"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "seconds"],
+          "properties": {
+            "type": { "const": "timer" },
+            "seconds": { "type": "integer", "minimum": 1, "maximum": 3600 },
+            "announce": { "type": "boolean", "default": true }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": { "const": "confirm" },
+            "phrases": {
+              "description": "Extra phrases that count as 'done' for this step, on top of the global grammar.",
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 },
+              "uniqueItems": true
+            }
+          }
+        }
+      ]
+    },
+    "mistake": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "message", "severity", "source"],
+      "properties": {
+        "id": { "$ref": "#/$defs/mistakeId" },
+        "kind": { "enum": ["order", "visual"] },
+        "requires": {
+          "description": "For 'order' mistakes: steps that must be done before this step starts.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/stepId" },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "criteria": {
+          "description": "For 'visual' mistakes: what the mistake looks like, in English, for the verifier model.",
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 300
+        },
+        "message": { "$ref": "#/$defs/spokenText" },
+        "severity": { "enum": ["info", "warn"] },
+        "source": { "enum": ["expert", "compiler", "author"] }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "order" } } },
+          "then": { "required": ["requires"], "not": { "required": ["criteria"] } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "visual" } } },
+          "then": { "required": ["criteria"], "not": { "required": ["requires"] } }
+        }
+      ]
+    },
+    "hint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trigger", "message"],
+      "properties": {
+        "trigger": { "enum": ["on_enter", "on_stuck", "on_request"] },
+        "afterSec": { "type": "integer", "minimum": 1 },
+        "message": { "$ref": "#/$defs/spokenText" }
+      },
+      "if": { "properties": { "trigger": { "const": "on_stuck" } } },
+      "then": { "required": ["afterSec"] }
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "mime", "sha256", "bytes"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^assets/[A-Za-z0-9._/-]+$" },
+        "mime": {
+          "enum": ["audio/ogg", "image/jpeg", "image/webp", "application/x-ustaad-embedding"]
+        },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "bytes": { "type": "integer", "minimum": 1 },
+        "durationMs": { "type": "integer", "minimum": 1 },
+        "embedding": {
+          "description": "Shape of an embedding matrix: 'count' row vectors of length 'dim'.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["dim", "dtype", "count"],
+          "properties": {
+            "dim": { "type": "integer", "minimum": 1 },
+            "dtype": { "enum": ["float16", "float32"] },
+            "count": { "type": "integer", "minimum": 1 }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "mime": { "const": "application/x-ustaad-embedding" } } },
+          "then": { "required": ["embedding"] }
+        },
+        {
+          "if": { "properties": { "mime": { "const": "audio/ogg" } } },
+          "then": { "required": ["durationMs"] }
+        }
+      ]
+    }
+  }
+}
